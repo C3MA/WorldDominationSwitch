@@ -19,8 +19,7 @@ end
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 function mqttsubscribe()
  tmr.alarm(1,50,0,function() 
-        m:subscribe("/room/light/+/state",0, function(conn) print("subscribe 5 success") end) 
-        m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) 
+        m:subscribe("/room/light/#",0, function(conn) print("subscribe 5 success") end) 
     end)
  --tmr.alarm(4,200,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
 end
@@ -43,7 +42,7 @@ m:on("message", function(conn, topic, data)
 	m:publish("/room/light/6/command","on",0,0,sleepnode())
         end)
      end
-   elseif topic=="/room/debug" then
+   elseif topic=="/room/light/debug" then
      if data=="enabled" then
         maintenanceMode=1
      end

@@ -9,5 +9,5 @@ ESP8266 controlled power saving battery operated wireless LAN MQTT switch
 
 ## Debug Mode
 Activate the debug Mode, with your PC (mosqiutto-client required):
- mosquitto_pub -h 10.23.42.10 -r -t "/room/debug" -m "enabled"
+ mosquitto_pub -h 10.23.42.10 -r -t "/room/light/debug" -m "enabled"
 
