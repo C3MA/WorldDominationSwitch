@@ -6,9 +6,28 @@ wifi.sta.config("sticknet","stickpw1")
 sollich=1
 maintenanceMode=0
 
+global_c=nil
 function sleepnode()
  if maintenanceMode==1 then
     print("Maintenance Mode starting...")
+    s=net.createServer(net.TCP, 180)
+	s:listen(2323,function(c)
+	global_c=c
+	function s_output(str)
+	  if(global_c~=nil)
+	     then global_c:send(str)
+	  end
+	end
+	node.output(s_output, 0)
+	c:on("receive",function(c,l)
+	  node.input(l)
+	end)
+	c:on("disconnection",function(c)
+	  node.output(nil)
+	  global_c=nil
+	end)
+	print("Welcome to the Switch")
+	end)
  else
      print("Good Night")
      node.dsleep(0)
