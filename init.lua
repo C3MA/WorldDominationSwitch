@@ -1,7 +1,7 @@
 -- Tell the chip to connect to thi access point
 wifi.setmode(wifi.STATION)
-wifi.sta.setip({ip="192.168.23.235",netmask="255.255.255.0",gateway="192.168.23.254"})
-wifi.sta.config("sticknet","stickpw1")
+wifi.sta.setip({ip="10.23.42.22",netmask="255.255.254.0",gateway="10.23.42.1"})
+wifi.sta.config("SSID","PASSWORD")
 -- All global Variables
 sollich=1
 maintenanceMode=0
@@ -84,3 +84,11 @@ tmr.alarm(0, 100, 1, function()
      m:connect("10.23.42.10",1883,0)
   end
 end)
+
+-- Secure that we ALWAYS (even in Maintenance) sleep after 10 minutes
+-- 1000 (milli) * 60 (seconds) * 10 = 600000
+tmr.alarm(4, 600000, 0, function() 
+  print("Over and out")
+  node.dsleep(0) 
+end)
+
