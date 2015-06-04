@@ -18,8 +18,11 @@ end
 -- The Mqtt logic
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 function mqttsubscribe()
- tmr.alarm(1,50,0,function() m:subscribe("/room/light/+/state",0, function(conn) print("subscribe 5 success") end) end)
- tmr.alarm(4,100,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
+ tmr.alarm(1,50,0,function() 
+        m:subscribe("/room/light/+/state",0, function(conn) print("subscribe 5 success") end) 
+        m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) 
+    end)
+ --tmr.alarm(4,200,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
 end
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 m:on("connect", mqttsubscribe)
