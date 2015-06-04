@@ -85,10 +85,4 @@ tmr.alarm(0, 100, 1, function()
   end
 end)
 
--- Secure that we ALWAYS (even in Maintenance) sleep after 10 minutes
--- 1000 (milli) * 60 (seconds) * 10 = 600000
-tmr.alarm(4, 600000, 0, function() 
-  print("Over and out")
-  node.dsleep(0) 
-end)
 
