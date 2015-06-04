@@ -2,17 +2,25 @@
 wifi.setmode(wifi.STATION)
 wifi.sta.setip({ip="192.168.23.235",netmask="255.255.255.0",gateway="192.168.23.254"})
 wifi.sta.config("sticknet","stickpw1")
+-- All global Variables
+sollich=1
+maintenanceMode=0
 
 function sleepnode()
- print("Good Night")
- node.dsleep(0)
+ if maintenanceMode==1 then
+    print("Maintenance Mode starting...")
+ else
+     print("Good Night")
+     node.dsleep(0)
+ end
 end
 
+-- The Mqtt logic
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 function mqttsubscribe()
  tmr.alarm(1,50,0,function() m:subscribe("/room/light/+/state",0, function(conn) print("subscribe 5 success") end) end)
+ tmr.alarm(4,100,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
 end
-sollich=1
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 m:on("connect", mqttsubscribe)
 m:on("offline", function(con) print ("offline") end)
@@ -32,13 +40,14 @@ m:on("message", function(conn, topic, data)
 	m:publish("/room/light/6/command","on",0,0,sleepnode())
         end)
      end
+   elseif topic=="/room/debug" then
+     if data="enabled" then
+        maintenanceMode=1
+     end
    end
 end)
 
-
-
--- Connect to the WiFi access point. Once the device is connected,
--- you may start the HTTP server.
+-- Wait to be connect to the WiFi access point. 
 tmr.alarm(0, 100, 1, function()
   if wifi.sta.status() ~= 5 then
      print("Connecting to AP...")
@@ -51,7 +60,6 @@ tmr.alarm(0, 100, 1, function()
   else
      tmr.stop(0)
      print('IP: ',wifi.sta.getip())
-     -- Uncomment to automatically start the server in port 80
      m:connect("10.23.42.10",1883,0)
   end
 end)
