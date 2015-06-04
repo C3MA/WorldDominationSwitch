@@ -42,6 +42,12 @@ end)
 tmr.alarm(0, 100, 1, function()
   if wifi.sta.status() ~= 5 then
      print("Connecting to AP...")
+-- sleep, if no wifi after 10seconds runtime
+    if tmr.now() > 10000000 then
+      tmr.stop(0)
+      print("No Wifi - Damn - Good night")
+      sleepnode() 
+     end
   else
      tmr.stop(0)
      print('IP: ',wifi.sta.getip())
