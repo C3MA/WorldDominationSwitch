@@ -1,6 +1,8 @@
 # WorldDominationSwitch
 ESP8266 controlled power saving battery operated wireless LAN MQTT switch
 
+Based on the nodemcu-firmware
+
 ## Interface
 1. Switch
 2. Wifi
