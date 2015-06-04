@@ -41,7 +41,7 @@ m:on("message", function(conn, topic, data)
         end)
      end
    elseif topic=="/room/debug" then
-     if data="enabled" then
+     if data=="enabled" then
         maintenanceMode=1
      end
    end
