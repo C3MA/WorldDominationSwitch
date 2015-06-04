@@ -5,10 +5,12 @@ wifi.sta.config("SSID","PASSWORD")
 -- All global Variables
 sollich=1
 maintenanceMode=0
-
+secondPublish=0
 global_c=nil
+
 function sleepnode()
  if maintenanceMode==1 then
+    maintenanceMode=3 -- reached maintenance Mode
     print("Maintenance Mode starting...")
     s=net.createServer(net.TCP, 180)
 	s:listen(2323,function(c)
@@ -28,7 +30,7 @@ function sleepnode()
 	end)
 	print("Welcome to the Switch")
 	end)
- else
+ elseif maintenanceMode == 0 then
      print("Good Night")
      node.dsleep(0)
  end
@@ -40,7 +42,6 @@ function mqttsubscribe()
  tmr.alarm(1,50,0,function() 
         m:subscribe("/room/light/#",0, function(conn) print("subscribe 5 success") end) 
     end)
- --tmr.alarm(4,200,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
 end
 m = mqtt.Client("ESP8266", 120, "user", "pass")
 m:on("connect", mqttsubscribe)
@@ -50,16 +51,20 @@ m:on("message", function(conn, topic, data)
     sollich=0
     if data=="on" then
      print("Es war An!")
-     m:publish("/room/light/5/command","off",0,0,nil)
-     tmr.alarm(2,300,0,function() 
-	m:publish("/room/light/6/command","off",0,0,sleepnode())
+     m:publish("/room/light/5/command","off",0,0, function()
+       if secondPublish==0 then
+          secondPublish=1
+	      m:publish("/room/light/6/command","off",0,0,sleepnode())
+        end
      end)
    else 
      print("Es war Aus!")
-     m:publish("/room/light/5/command","on",0,0,nil)
-     tmr.alarm(3,300,0,function() 
-	m:publish("/room/light/6/command","on",0,0,sleepnode())
-        end)
+     m:publish("/room/light/5/command","on",0,0, function()
+       if secondPublish==0 then
+          secondPublish=1
+	      m:publish("/room/light/6/command","on",0,0,sleepnode())
+       end
+      end)
      end
    elseif topic=="/room/light/debug" then
      if data=="enabled" then
