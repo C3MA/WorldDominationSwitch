@@ -46,21 +46,15 @@ m = mqtt.Client("ESP8266", 120, "user", "pass")
 m:on("connect", mqttsubscribe)
 m:on("offline", function(con) print ("offline") end)
 m:on("message", function(conn, topic, data)
-   if topic=="/room/light/5/state" and sollich==1 then
+   if topic=="/room/light/w/state" and sollich==1 then
     sollich=0
     if data=="on" then
      print("Es war An!")
-     m:publish("/room/light/5/command","off",0,0,nil)
-     tmr.alarm(2,300,0,function() 
-	m:publish("/room/light/6/command","off",0,0,sleepnode())
-     end)
-   else 
+     m:publish("/room/light/w/command","off",0,0,nil)
+    else 
      print("Es war Aus!")
-     m:publish("/room/light/5/command","on",0,0,nil)
-     tmr.alarm(3,300,0,function() 
-	m:publish("/room/light/6/command","on",0,0,sleepnode())
-        end)
-     end
+     m:publish("/room/light/w/command","on",0,0,nil)
+    end
    elseif topic=="/room/light/debug" then
      if data=="enabled" then
         maintenanceMode=1
