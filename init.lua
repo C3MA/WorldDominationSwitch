@@ -50,10 +50,10 @@ m:on("message", function(conn, topic, data)
     sollich=0
     if data=="on" then
      print("Es war An!")
-     m:publish("/room/light/w/command","off",0,0,nil)
+     m:publish("/room/light/w/command","off",0,0,sleepnode)
     else 
      print("Es war Aus!")
-     m:publish("/room/light/w/command","on",0,0,nil)
+     m:publish("/room/light/w/command","on",0,0,sleepnode)
     end
    elseif topic=="/room/light/debug" then
      if data=="enabled" then
