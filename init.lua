@@ -6,6 +6,10 @@ wifi.sta.config("SSID","PASSWORD")
 sollich=1
 maintenanceMode=0
 
+
+-- The Mqtt logic
+m = mqtt.Client("ESP8266", 120, "user", "pass")
+
 global_c=nil
 function sleepnode()
  if maintenanceMode==1 then
@@ -30,19 +34,19 @@ function sleepnode()
 	end)
  else
      print("Good Night")
-     node.dsleep(0)
- end
+     v=node.readvdd33()
+     print(v)
+     tmr.alarm(4,400,0,function()
+      m:publish("/room/switch/w/voltage",v,0,0,node.dsleep(0))
+     end)
+end
 end
 
--- The Mqtt logic
-m = mqtt.Client("ESP8266", 120, "user", "pass")
 function mqttsubscribe()
  tmr.alarm(1,50,0,function() 
-        m:subscribe("/room/light/#",0, function(conn) print("subscribe 5 success") end) 
+        m:subscribe("/room/light/#",0, function(conn) print("subscribe /room/light success") end) 
     end)
- --tmr.alarm(4,200,0,function() m:subscribe("/room/debug",0, function(conn) print("Listening for /room/debug") end) end)
 end
-m = mqtt.Client("ESP8266", 120, "user", "pass")
 m:on("connect", mqttsubscribe)
 m:on("offline", function(con) print ("offline") end)
 m:on("message", function(conn, topic, data)
