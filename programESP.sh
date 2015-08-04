@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEVICE=/dev/tty.usbserial-A50285BI
+DEVICE=/dev/ttyUSB0
 SLEEPTIME=0.2
 TCPPORT=2323
 
