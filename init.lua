@@ -37,7 +37,7 @@ function sleepnode()
      v=node.readvdd33()
      print(v)
      tmr.alarm(4,400,0,function()
-      m:publish("/room/switch/w/voltage",v,0,0,node.dsleep(0))
+      m:publish("/room/switch/voltage",v,0,0,node.dsleep(0))
      end)
 end
 end
@@ -50,14 +50,14 @@ end
 m:on("connect", mqttsubscribe)
 m:on("offline", function(con) print ("offline") end)
 m:on("message", function(conn, topic, data)
-   if topic=="/room/light/w/state" and sollich==1 then
+   if topic=="/room/light/workshop/state" and sollich==1 then
     sollich=0
     if data=="on" then
      print("Es war An!")
-     m:publish("/room/light/w/command","off",0,0,sleepnode)
+     m:publish("/room/light/workshop/command","off",0,0,sleepnode)
     else 
      print("Es war Aus!")
-     m:publish("/room/light/w/command","on",0,0,sleepnode)
+     m:publish("/room/light/workshop/command","on",0,0,sleepnode)
     end
    elseif topic=="/room/light/debug" then
      if data=="enabled" then
